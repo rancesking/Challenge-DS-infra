@@ -22,6 +22,7 @@ jobs:
       run: |
         mkdir -p $HOME/.kube
         echo "${K8S_CONFIG}" | > $HOME/.kube/config
+        export KUBECONFIG=$HOME/.kube/config
       
     - name: Apply pods
       run: kubectl apply -f ./kube/deploy.yml
