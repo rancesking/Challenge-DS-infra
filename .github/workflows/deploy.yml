@@ -18,7 +18,6 @@ jobs:
       uses: azure/k8s-set-context@v1
       with:
         kubeconfig: ${{ secrets.K8S_CONFIG }}
-        version: "latest"
     - name: Deploy to MicroK8s
       run: |
         kubectl apply -f ./kube/deploy.yml
