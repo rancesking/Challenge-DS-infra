@@ -35,7 +35,7 @@ spec:
       - name: python-api
         image: xkingrd/ds-challenge:latest
         resources:
-          request:
+          requests:
             memory: "64Mi"
             cpu: "250m"
           limits:
