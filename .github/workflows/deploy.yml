@@ -15,7 +15,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
     - name: Kubectl tool installer
-      uses: Azure/setup-kubectl@v1
+      uses: Azure/setup-kubectl@v3
     - name: Setup kubectl
       env: 
         K8S_CONFIG: ${{ secrets.K8S_CONFIG }}
@@ -25,5 +25,5 @@ jobs:
         export KUBECONFIG=$HOME/.kube/config
       
     - name: Apply pods
-      run: kubectl --kubeconfig $HOME/.kube/config apply -f ./kube/deploy.yml
+      run: kubectl apply -f ./kube/deploy.yml
       
