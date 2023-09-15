@@ -14,17 +14,12 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-    - name: Kubectl tool installer
-      uses: Azure/setup-kubectl@v3
-    - name: Setup kubectl
-      env: 
-        K8S_CONFIG: ${{ secrets.K8S_CONFIG }}
+    - name: Set up kubectl
+      uses: azure/k8s-set-context@v1
+      with:
+        kubeconfig: ${{ secrets.K8S_CONFIG }}
+        version: "latest"
+    - name: Deploy to MicroK8s
       run: |
-        mkdir -p $HOME/.kube
-        echo "${K8S_CONFIG}" | > $HOME/.kube/config
-        cat $HOME/.kube/config
-    - name: Apply pods
-      env:
-        KUBECONFIG: $HOME/.kube/config  
-      run: kubectl apply -f ./kube/deploy.yml
+        kubectl apply -f ./kube/deploy.yaml
       
