@@ -21,7 +21,7 @@ jobs:
         K8S_CONFIG: ${{ secrets.K8S_CONFIG }}
       run: |
         mkdir -p $HOME/.kube
-        echo "${K8S_CONFIG}" | base64 --decode > $HOME/.kube/config
+        echo "${K8S_CONFIG}" | > $HOME/.kube/config
       
     - name: Apply pods
       run: kubectl apply -f ./kube/deploy.yml
