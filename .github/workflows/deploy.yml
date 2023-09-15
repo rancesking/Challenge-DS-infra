@@ -1,0 +1,28 @@
+name: Challenge-CD
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'kube/**'
+  workflow_dispatch:
+    
+jobs:     
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Kubectl tool installer
+      uses: Azure/setup-kubectl@v1
+    - name: Setup kubectl
+      env: 
+        K8S_CONFIG: ${{ secrets.K8S_CONFIG }}
+      run: |
+        mkdir -p $HOME/.kube
+        echo "${K8S_CONFIG}" | base64 --decode > $HOME/.kube/config
+      
+    - name: Apply pods
+      run: kubectl apply -f ./kube/deploy.yml
+      
