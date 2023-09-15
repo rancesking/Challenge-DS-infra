@@ -2,7 +2,7 @@
 
 ## Description
 
-This is a Terraform module for creating AWS EC2 instances.
+This is a Terraform module for creating AWS EC2 instances with Microk8s bootstraping.
 
 ## Usage
 
@@ -10,7 +10,7 @@ Here's an example usage:
 
 ```hcl
 module "ec2_instance" {
-  source =""
+  source ="https://github.com/rancesking/Challenge-DS-infra"
   
 region            = "us-east-1"
 env               = "dev"

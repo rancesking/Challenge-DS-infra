@@ -16,12 +16,13 @@ sed -i 's/ChallengeResponseAuthentication yes/ChallengeResponseAuthentication no
 # Restart SSH service
 sudo systemctl restart sshd
 
-#Install MicroK8S
+#Install MicroK8S enabling DNS and Ingress
 sudo snap install microk8s --classic --channel=1.28
 sudo usermod -a -G microk8s ${user}
 sudo chown -f -R ${user} ~/.kube
 microk8s status --wait-ready
 sleep 5
 microk8s enable dns ingress 
+sleep 15
 
-echo "I'm Ready to go"
+echo "I'm Ready to go"m
