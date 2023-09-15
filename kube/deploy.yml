@@ -1,0 +1,90 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: devsu-dev
+spec: {}
+status: {}
+---
+apiVersion: v1
+data:
+  secret: ZGphbmdvLWluc2VjdXJlLXdjMmkyKjZeMTckOSF1Kyh1NjZAcV9yZykrK24xeC1eKDAtJDN5ejJmKG49Xy1vKjc9
+kind: Secret
+metadata:
+  name: devsu-app
+  namespace: devsu-dev
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devsu-app
+  namespace: devsu-dev
+  labels:
+    app: django
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: django
+  template:
+    metadata:
+      labels:
+        app: django
+    spec:
+      containers:
+      - name: python-api
+        image: xkingrd/ds-challenge:latest
+        resources:
+          request:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "250m"
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DJANGO_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: devsu-app
+              key: secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: django
+  name: devsu-app
+  namespace: devsu-dev
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8000
+  selector:
+    app: django
+  type: LoadBalancer
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: devsu-app
+  namespace: devsu-dev
+  annotations:
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+    nginx.ingress.kubernetes.io/session-cookie-name: "http-cookie"
+    nginx.ingress.kubernetes.io/session-cookie-expires: "172800"
+    nginx.ingress.kubernetes.io/session-cookie-max-age: "172800"
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: devsu-app
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+
